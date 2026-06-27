@@ -6,6 +6,24 @@ This dashboard UI is designed as a premium SaaS-style interface inspired by Tesl
 
 ---
 
+## 🌍 Problem
+
+Road hazards such as accidents, flooded roads, potholes, and road conflicts often go unreported until it's too late. Drivers may not have a safe or quick way to report these incidents while driving.
+
+This leads to:
+- Delayed awareness of hazards
+- Increased risk of secondary accidents
+- Poor community visibility into road conditions
+- Slower emergency response
+
+## 💡 Solution
+
+Hey Honey is an AI-powered Road Safety Agent that listens for natural voice commands, understands the reported hazard, captures the user's location, and publishes the event to a shared real-time community map.
+
+The project demonstrates how AI agents can combine voice interaction, reasoning, geolocation, cloud databases, and live collaboration to improve road safety.
+
+---
+
 ## 📊 System Architecture & Data Workflows
 
 Below are interactive flowcharts and architectural diagrams describing how **Hey Honey** processes telemetry, speech recognition, and database synchronizations.
@@ -15,7 +33,7 @@ This flowchart describes how a driver's vocal report is processed, cleaned, clas
 
 ```mermaid
 graph TD
-    A[Driver Speaks: 'Hey Honey, Accident'] --> B[Web Speech Recognition API]
+    A["Driver Speaks: 'Hey Honey, Accident'"] --> B[Web Speech Recognition API]
     B --> C[Raw Text Transcript]
     C --> D[Levenshtein Distance Spell-Corrector]
     D --> E[Fuzzy NLP Classifier Engine]
@@ -80,14 +98,32 @@ graph TD
 
 ---
 
-## 🚀 Key Features
+## ✨ Features
 
-- 🎙️ **Hands-free AI Voice Reporting:** Speak commands like *"Hey Honey, Accident"* or *"Hey Honey, Water"* to submit a report without touching your screen.
-- 📡 **Nearby Hazard Radar:** Automatically scans, calculates, and lists hazards around the driver's current position, sorted by nearest distance.
-- 🗺️ **Full-height Interactive Map:** Fills the left screen area containing floating overlays: centered glowing microphone button, small AI status badge, zoom/locate controls, and bottom legend.
-- 🔄 **Real-Time Synchronization:** Seamless cross-client updates using Supabase Realtime (with multi-tab local broadcast syncing as an instant offline fallback).
-- 🚑 **Simulated Accident Workflow:** When an accident is reported, a simulated emergency checklist runs (✓ Police Notified, ✓ Ambulance Notified, ✓ Emergency Contact Notified).
-- 💻 **Offline Simulator Map:** If Google Maps fails to load or internet is disconnected, the app launches a vector-grid map simulator where you can click to simulate reporting hazards.
+### 🎤 Voice Reporting
+Supported commands:
+- **Hey Honey, Accident**
+- **Hey Honey, Water**
+- **Hey Honey, Rain**
+- **Hey Honey, Road**
+- **Hey Honey, Fight**
+
+### 🧠 AI Road Safety Agent
+The AI Agent:
+- Listens to hands-free voice commands
+- Understands user intent
+- Classifies hazards
+- Captures GPS location
+- Stores reports
+- Updates the community map
+- Provides intelligent confirmation
+
+### 📡 Additional System Modules
+- **Nearby Hazard Radar:** Automatically scans, calculates, and lists hazards around the driver's current position, sorted by nearest distance.
+- **Full-height Interactive Map:** Fills the left screen area containing floating overlays: centered glowing microphone button, small AI status badge, zoom/locate controls, and bottom legend.
+- **Real-Time Synchronization:** Seamless cross-client updates using Supabase Realtime (with multi-tab local broadcast syncing as an instant offline fallback).
+- **Simulated Accident Workflow:** When an accident is reported, a simulated emergency checklist runs (✓ Police Notified, ✓ Ambulance Notified, ✓ Emergency Contact Notified).
+- **Offline Simulator Map:** If Google Maps fails to load or internet is disconnected, the app launches a vector-grid map simulator where you can click to simulate reporting hazards.
 
 ---
 
@@ -206,3 +242,35 @@ Ensure you have Node.js (LTS version) installed.
    ```bash
    npm run build
    ```
+
+---
+
+## 🌍 Social Impact
+
+Hey Honey promotes safer roads through collaborative hazard reporting and AI-assisted voice interaction.
+
+Potential future applications include:
+- Smart cities
+- Community safety
+- Emergency response integration
+- Disaster reporting
+- Public infrastructure monitoring
+
+---
+
+## 🔮 Future Enhancements
+- Automatic accident detection
+- Emergency service integration
+- Route risk prediction
+- AI hazard severity estimation
+- Multi-language voice commands
+- Offline reporting
+
+---
+
+## 👩‍💻 Developer
+
+**Bollepalli Devi Harshini**
+- **GitHub:** [bollepallideviharshini](https://github.com/bollepallideviharshini)
+- **LinkedIn:** [Bollepalli Devi Harshini](https://www.linkedin.com/in/bollepalli-devi-harshini/)
+- **Email:** bollepallideviharshini@gmail.com
