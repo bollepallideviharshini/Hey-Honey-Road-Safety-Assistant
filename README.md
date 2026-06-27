@@ -1,14 +1,90 @@
 # Hey Honey - AI-Powered Road Safety Assistant
 
-Hey Honey is a modern, real-time road safety web application that allows drivers to report road hazards using natural voice commands. The application utilizes client-side AI parsing to classify hazard types, captures the user's GPS coordinates, reverse-geocodes locations into human-readable addresses, and syncs events to a live community map and feed.
+Hey Honey is a modern, real-time road safety web application that allows drivers to report road hazards hands-free using natural voice commands. The application utilizes client-side AI parsing to classify hazard types, captures the user's GPS coordinates, reverse-geocodes locations into human-readable addresses, and syncs events to a live community map and feed.
+
+This dashboard UI is designed as a premium SaaS-style interface inspired by Tesla dashboard displays, Linear, and Vercel.
+
+---
+
+## 📊 System Architecture & Data Workflows
+
+Below are interactive flowcharts and architectural diagrams describing how **Hey Honey** processes telemetry, speech recognition, and database synchronizations.
+
+### 1. Hands-Free Voice Reporting Workflow
+This flowchart describes how a driver's vocal report is processed, cleaned, classified, geocoded, and pushed to the cloud in real-time.
+
+```mermaid
+graph TD
+    A[Driver Speaks: 'Hey Honey, Accident'] --> B[Web Speech Recognition API]
+    B --> C[Raw Text Transcript]
+    C --> D[Levenshtein Distance Spell-Corrector]
+    D --> E[Fuzzy NLP Classifier Engine]
+    E -- Match Found? --> F{Classified Hazard}
+    F -- Yes --> G[Trigger Geolocation Hook]
+    F -- No --> H[Log Unrecognized Command Toast]
+    G --> I[Get Lat/Lng Telemetry]
+    I --> J[Google Maps Geocoder / OSM Nominatim API]
+    J --> K[Human-Readable Address Resolved]
+    K --> L[Format RoadEvent Object]
+    L --> M[Push to Supabase PostgreSQL Database]
+    M --> N[Supabase Realtime Broadcast Channels]
+    N --> O[All Active Web Clients Interface Updates]
+```
+
+### 2. Multi-Tab Database Synchronization
+This diagram illustrates the dual-mode synchronization layer: connecting directly to Supabase Realtime Channels or falling back automatically to local multi-tab broadcast storage.
+
+```mermaid
+graph LR
+    subgraph Client Browser (Tab A)
+        A1[Voice Input] --> A2[AI Classifier]
+        A2 --> A3[Database Client Wrapper]
+    end
+    
+    subgraph Synced Clients (Tab B / Tab C)
+        B1[Map Canvas Updates]
+        B2[Feed Cards Insertion]
+    end
+    
+    subgraph Data Layer
+        A3 -- Connection Active? --> S1{Supabase Backend}
+        S1 -- Yes --> S2[PostgreSQL DB]
+        S2 --> S3[Realtime Publication]
+        S3 --> B1
+        S3 --> B2
+        
+        A3 -- Connection Blocked? --> M1[Mock LocalStorage]
+        M1 --> M2[BroadcastChannel API]
+        M2 --> B1
+        M2 --> B2
+    end
+```
+
+### 3. Accident Emergency Dispatch Workflow
+When an accident is reported, a specialized checklist tracks simulated dispatch state:
+
+```mermaid
+graph TD
+    A[Accident Detected] --> B[Launch AccidentWorkflowModal]
+    B --> C[Step 1: Contacting Police Dispatch]
+    C -- Status: Pending --> D[Simulate 2s Networking Delay]
+    D -- Status: Success --> E[✓ Police Notified]
+    E --> F[Step 2: Alerting Nearest Medical Dispatch]
+    F -- Status: Pending --> G[Simulate 2.5s Delay]
+    G -- Status: Success --> H[✓ Ambulance En Route]
+    H --> I[Step 3: Alerting Emergency Contacts]
+    I -- Status: Pending --> J[Simulate 1.5s Delay]
+    J -- Status: Success --> K[✓ Contact Notified]
+    K --> L[Simulated Routine Complete - Dismiss Workflow]
+```
 
 ---
 
 ## 🚀 Key Features
 
-- 🎙️ **Hands-free AI Voice Reporting:** Speak commands like *"Hey Honey Accident"* or *"Hey Honey Water"* to submit a report without touching your device.
+- 🎙️ **Hands-free AI Voice Reporting:** Speak commands like *"Hey Honey, Accident"* or *"Hey Honey, Water"* to submit a report without touching your screen.
 - 📡 **Nearby Hazard Radar:** Automatically scans, calculates, and lists hazards around the driver's current position, sorted by nearest distance.
-- 🗺️ **Live Community Map:** Interactive dark mode map featuring animated markers colored by hazard type (Red for Accidents, Blue for Water, Yellow for Rain, Orange for Road Damage, Purple for Fights).
+- 🗺️ **Full-height Interactive Map:** Fills the left screen area containing floating overlays: centered glowing microphone button, small AI status badge, zoom/locate controls, and bottom legend.
 - 🔄 **Real-Time Synchronization:** Seamless cross-client updates using Supabase Realtime (with multi-tab local broadcast syncing as an instant offline fallback).
 - 🚑 **Simulated Accident Workflow:** When an accident is reported, a simulated emergency checklist runs (✓ Police Notified, ✓ Ambulance Notified, ✓ Emergency Contact Notified).
 - 💻 **Offline Simulator Map:** If Google Maps fails to load or internet is disconnected, the app launches a vector-grid map simulator where you can click to simulate reporting hazards.
@@ -39,10 +115,18 @@ Safetyproject/
 │   ├── types/
 │   │   └── index.ts            # RoadEvent, HazardType, LocationState, SpeechState interfaces
 │   ├── hooks/
-│   │   ├── useGeolocation.ts   # Real-time GPS coordinate watch state & fallbacks
+│   │   ├── useGeolocation.ts   # Real-time watch state GPS trackers & fallbacks
 │   │   └── useSpeechRecognition.ts # Browser Speech API wrapper, triggers, & reconnects
+│   ├── components/
+│   │   ├── MapContainer.tsx    # Google Maps wrappers & offline simulators
+│   │   ├── CommunityFeed.tsx   # Premium expandable feed lists
+│   │   ├── NearbyRadar.tsx     # Sonar sweep radar scanners
+│   │   ├── VoiceController.tsx # Pulsing floating mic overlay controllers
+│   │   ├── StatusCard.tsx      # High-tech system configuration checklists
+│   │   ├── NotificationToast.tsx # OS-style spring-animated glass alert popups
+│   │   └── AccidentWorkflowModal.tsx # Emergency dispatch checklists
 │   ├── services/
-│   │   └── aiClassifier.ts     # NLP classifier, soundalike trigger matching, fuzzy keywords, Levenshtein distance
+│   │   └── aiClassifier.ts     # NLP classifier, trigger matching, fuzzy keywords, Levenshtein distance
 │   ├── supabase/
 │   │   └── config.ts           # Supabase client config & fallback Mock DB localStorage system
 │   ├── utils/
@@ -122,16 +206,3 @@ Ensure you have Node.js (LTS version) installed.
    ```bash
    npm run build
    ```
-
----
-
-## 🌐 Deployment to Vercel
-
-Prepare the project to host on Vercel:
-
-1. Install the Vercel CLI or deploy via GitHub integration.
-2. In the Vercel Dashboard, set the following **Environment Variables**:
-   - `VITE_SUPABASE_URL`
-   - `VITE_SUPABASE_ANON_KEY`
-   - `VITE_GOOGLE_MAPS_API_KEY`
-3. Configure settings to run Vite builds (`npm run build` and output directory `dist`).
