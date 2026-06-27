@@ -36,24 +36,24 @@ This diagram illustrates the dual-mode synchronization layer: connecting directl
 
 ```mermaid
 graph LR
-    subgraph Client Browser (Tab A)
+    subgraph "Client Browser (Tab A)"
         A1[Voice Input] --> A2[AI Classifier]
         A2 --> A3[Database Client Wrapper]
     end
     
-    subgraph Synced Clients (Tab B / Tab C)
+    subgraph "Synced Clients (Tab B / Tab C)"
         B1[Map Canvas Updates]
         B2[Feed Cards Insertion]
     end
     
-    subgraph Data Layer
-        A3 -- Connection Active? --> S1{Supabase Backend}
-        S1 -- Yes --> S2[PostgreSQL DB]
+    subgraph "Data Layer"
+        A3 -- "Connection Active?" --> S1{Supabase Backend}
+        S1 -- "Yes" --> S2[PostgreSQL DB]
         S2 --> S3[Realtime Publication]
         S3 --> B1
         S3 --> B2
         
-        A3 -- Connection Blocked? --> M1[Mock LocalStorage]
+        A3 -- "Connection Blocked?" --> M1[Mock LocalStorage]
         M1 --> M2[BroadcastChannel API]
         M2 --> B1
         M2 --> B2
