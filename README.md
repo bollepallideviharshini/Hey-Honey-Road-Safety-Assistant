@@ -2,7 +2,6 @@
 
 Hey Honey is a modern, real-time road safety web application that allows drivers to report road hazards hands-free using natural voice commands. The application utilizes client-side AI parsing to classify hazard types, captures the user's GPS coordinates, reverse-geocodes locations into human-readable addresses, and syncs events to a live community map and feed.
 
-This dashboard UI is designed as a premium SaaS-style interface inspired by Tesla dashboard displays, Linear, and Vercel.
 
 ---
 
